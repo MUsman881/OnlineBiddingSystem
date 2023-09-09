@@ -1,0 +1,95 @@
+﻿@model User
+@{
+    ViewData["Title"] = "User Detail";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<style>
+    .select2-results__option {
+        color: #000 !important;
+    }
+</style>
+
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row pt-4 mb-3">
+        <div class="col-12">
+            <h3 class="text-dark">User Detail</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <form enctype="multipart/form-data">
+            <input type="hidden" asp-for="Id" id="userId" />
+            <div class="row">
+                <div class="col-xl-6 col-lg-12 col-md-6 mb-3">
+                    <label class="form-label text-dark">First Name</label>
+                    <input asp-for="FirstName" class="form-control" id="FirstName" required autocomplete="off" readonly>
+                </div>
+                <div class="col-xl-6 col-lg-12 col-md-6 mb-3">
+                    <label class="form-label text-dark">Last Name</label>
+                    <input asp-for="LastName" class="form-control" id="LastName" required autocomplete="off" readonly>
+                </div>
+                <div class="col-xl-6 col-lg-12 col-md-12 mb-3">
+                    <div class="mb-3">
+                        <label class="form-label text-dark">Email</label>
+                        <input asp-for="Email" class="form-control" id="Email" required autocomplete="on" readonly>
+                    </div>
+                </div>
+                <div class="col-6 mb-3">    
+                    <label class="form-label text-dark">Status</label>
+                    <select asp-for="Status" id="Status" class="form-select w-100 text-dark mb-3">
+                        <option>Active</option>
+                        <option>Deactive</option>
+                    </select>
+                </div>
+                <div class="col-xl-6 col-lg-12 col-md-6 mb-3">
+                    <button type="button" id="btnsave" onClick="return ChangeStatus()" class="text-white btn btn-success">
+                        Change Status
+                    </button>
+                    <a asp-action="Users" asp-controller="Admin" class="btn btn-danger btn-small" style="color:#fff;">
+                        Back
+                    </a>
+
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+
+@section Scripts{
+    <script>
+
+            function ChangeStatus() {
+                
+                var id = $("#userId").val();
+                var status = $("#Status option:selected").text();
+
+                debugger;
+                $.ajax({
+                    type: 'POST',
+                    data: { userId: id, status: status },
+                    url: '@Url.Action("ChangeUserStatus", "Admin")',
+                    success: function (data) {
+                        if (data.success) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Success",
+                                text: data.message
+                            });
+                            window.setTimeout(function () {
+                                window.location.href = '@Url.Action("Users", "Admin")';
+                            }, 2000);
+                        }
+                    },
+                    error: function (data) {
+                        console.log("fail");
+                    }
+                });
+            };
+       
+    </script>
+}

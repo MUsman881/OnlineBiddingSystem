@@ -1,0 +1,58 @@
+﻿@model NotificationViewModel
+@{
+    ViewData["Title"] = "NotificationDetail";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+
+<style>
+    label {
+        color: #000;
+    }
+
+    .dataTables_info {
+        color: #000 !important;
+    }
+</style>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row pt-4 mb-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="display table table-hover table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>Img</th>
+                                    <th>Bid Title</th>
+                                    <th>Actual Price</th>
+                                    <th>Bid Price</th>
+                                    <th>Bid Owner</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th><img src="@Model.Bid.Auction.CoverPhoto" height="100px" width="100px" class="img-responsive img-fluid" /></th>
+                                    <th>@Model.Bid.Auction.Title</th>
+                                    <th>@Model.Bid.Auction.Price</th>
+                                    <th>@Model.Bid.BidAmount</th>
+                                    <th>@Model.Bid.Auction.User.Email</th>
+                                    @if (Model.Status == "Read")
+                                    {
+                                        <th>
+                                            <a href="@Url.Action("BuyAuction","Bid")?id=@Model.Bid.BidId" class="btn btn--small btn-success">Buy Auction</a>
+                                        </th>
+                                    }
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

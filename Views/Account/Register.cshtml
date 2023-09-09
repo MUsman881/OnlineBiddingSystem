@@ -1,0 +1,141 @@
+﻿@model User
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+        .input-group-addon {
+        padding: 15px 12px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1;
+        color: #555;
+        text-align: center;
+        background-color: #eee;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .btn{
+        padding:5px 15px!important;
+    }
+</style>
+
+
+<div class="signup-section pt-120 pb-120">
+    <img alt="image" src="~/assets/images/bg/section-bg.png" class="section-bg-top">
+    <img alt="image" src="~/assets/images/bg/section-bg.png" class="section-bg-bottom">
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="col-xl-6 col-lg-8 col-md-10">
+                <div class="form-wrapper wow fadeInUp" data-wow-duration="1.5s" data-wow-delay=".2s" style="visibility: visible; animation-duration: 1.5s; animation-delay: 0.2s; animation-name: fadeInUp;">
+                    <div class="form-title">
+                        <h3>Sign Up</h3>
+                        <p>Do you already have an account? <a asp-action="Login" asp-controller="Account">Log in here</a></p>
+                    </div>
+                    <form asp-action="Register" asp-controller="Account" method="post" class="w-100">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-inner">
+                                    <label>Frist Name *</label>
+                                    <input type="email" asp-for="FirstName" placeholder="Frist Name" required>
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-inner">
+                                    <label>Last Name *</label>
+                                    <input type="email" asp-for="LastName" placeholder="Last Name" required>
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-inner">
+                                    <label>Enter Your Email *</label>
+                                    <input type="email" asp-for="Email" placeholder="Enter Your Email" required>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-inner">
+                                    <label>Password *</label>
+                                    <input type="password" asp-for="Password" id="Password" placeholder="Create A Password" required>
+                                    <i class="bi bi-eye-slash" id="togglePassword"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-inner">
+                                    <label>Confirm Password *</label>
+                                    <input type="password" asp-for="ConfirmPassword" id="ConfirmPassword" placeholder="Confirm A Password" required>
+                                    <i class="bi bi-eye-slash" id="togglePassword2"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="mt-2" id="CheckPasswordMatch"></div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-agreement form-inner d-flex justify-content-between flex-wrap">
+                                    <div class="form-group">
+                                        <input type="checkbox" id="html">
+                                        <label for="html">I agree to the Terms &amp; Policy</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="account-btn">Create Account</button>
+                    </form>
+                    <div class="form-poicy-area">
+                        <p>By clicking the "signup" button, you create a Bidout account, and you agree to Bidout's <a href="#">Terms &amp; Conditions</a> &amp; <a href="#">Privacy Policy.</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#ConfirmPassword").keyup(checkPasswordMatch);
+        });
+
+        function checkPasswordMatch() {
+            var password = $("#Password").val();
+            var confirmPassword = $("#ConfirmPassword").val();
+            if (password != confirmPassword)
+                $("#CheckPasswordMatch").html("Password does not match!").css("color", "red");
+            else
+                $("#CheckPasswordMatch").html("").css("color", "green");
+        }
+
+        function checkUserEmail() {
+            var email = $("#Email").val();
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "/Account/CheckEmail",
+                data: {
+                    email: email
+                },
+                success: function (result) {
+                    var message = $("#message");
+                    if (result) {
+                        console.log("Email is available.")
+                        message.html("");
+                        $('#btnRegister').prop('disabled', false);
+                    }
+                    else {
+                        message.html("Email already exists, choose another email!");
+                        $('#btnRegister').prop('disabled', true);
+                    }
+                },
+                failure: function (result) {
+                    alert(response);
+                }
+            });
+        }
+
+    </script>
+
+    }

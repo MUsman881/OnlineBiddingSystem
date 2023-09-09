@@ -1,0 +1,226 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Auction and Bidding</title>
+    <link rel="icon" href="~/assets/images/bg/sm-logo.png" type="image/gif" sizes="20x20">
+    <link rel="stylesheet" href="~/assets/css/animate.css">
+
+    <link rel="stylesheet" href="~/assets/css/all.css">
+
+    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="~/assets/css/boxicons.min.css">
+
+    <link rel="stylesheet" href="~/assets/css/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="~/assets/css/jquery-ui.css">
+
+    <link rel="stylesheet" href="~/assets/css/swiper-bundle.min.css">
+
+    <link rel="stylesheet" href="~/assets/css/slick-theme.css">
+
+    <link rel="stylesheet" href="~/assets/css/slick.css">
+
+    <link rel="stylesheet" href="~/assets/css/nice-select.css">
+
+    <link rel="stylesheet" href="~/assets/css/magnific-popup.css">
+
+    <link rel="stylesheet" href="~/assets/css/odometer.css">
+
+    <link rel="stylesheet" href="~/assets/css/style.css" asp-append-version="true">
+</head>
+
+<body>
+
+    <div class="preloader">
+        <div class="loader">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+
+    <div class="topbar">
+        <div class="topbar-left d-flex flex-row align-items-center">
+            <h6>Follow Us</h6>
+            <ul class="topbar-social-list gap-2">
+                <li><a href="https://www.facebook.com/" target="_blank"><i class="bx bxl-facebook"></i></a></li>
+                <li><a href="https://www.twitter.com/" target="_blank"><i class="bx bxl-twitter"></i></a></li>
+                <li><a href="https://www.instagram.com/" target="_blank"><i class="bx bxl-instagram"></i></a></li>
+                <li><a href="https://www.pinterest.com/" target="_blank"><i class="bx bxl-pinterest-alt"></i></a></li>
+            </ul>
+        </div>
+        <div class="email-area">
+            <h6>
+                Email: <a href="">contact@example.com</a>
+            </h6>
+        </div>
+    </div>
+
+    <header class="header-area style-1">
+        <div class="header-logo">
+            <a asp-action="Index" asp-controller="Home"><img alt="image" src="~/assets/images/bg/header-logo.png"></a>
+        </div>
+        <div class="main-menu">
+            <div class="mobile-logo-area d-lg-none d-flex justify-content-between align-items-center">
+                <div class="mobile-logo-wrap ">
+                    <a asp-action="Index" asp-controller="Home"><img alt="image" src="~/assets/images/bg/header-logo.png"></a>
+                </div>
+                <div class="menu-close-btn">
+                    <i class="bi bi-x-lg"></i>
+                </div>
+            </div>
+            <ul class="menu-list">
+                <li>
+                    <a asp-action="Index" asp-controller="Home" class="@(ViewBag.Title == "Bidout" ? "active": "")">Home</a>
+                </li>
+                <li>
+                    <a asp-action="About" asp-controller="Home" class="@(ViewBag.Title == "About" ? "active": "")">About Us</a>
+                </li>
+                <li>
+                    <a asp-action="Works" asp-controller="Home" class="@(ViewBag.Title == "How it works" ? "active": "")">How It Works?</a>
+                </li>
+                <li>
+                    <a asp-action="Auctions" asp-controller="Home" class="@(ViewBag.Title == "All Auctions" ? "active": "")">Browse Auctions</a>
+                </li>
+                @if (User.Identity.IsAuthenticated && HttpContextAccessor.HttpContext.Session.GetInt32("UserId") != null)
+                {
+                    <li>
+                        <a asp-action="Dashboard" asp-controller="User" class="@(ViewBag.Title == "Dashboard" ? "active": "")">Dashboard</a>
+                    </li>
+                }
+                <li><a href="">Contact</a></li>
+            </ul>
+            @if (User.Identity.IsAuthenticated && HttpContextAccessor.HttpContext.Session.GetInt32("UserId") != null)
+            {
+                <div class="eg-btn d-lg-none text-white d-block btn bg-danger" style="margin-right:5px;">
+                    <a asp-action="Logout" asp-controller="Account">Logout</a>
+                </div>
+            }
+            else
+            {
+                <div class="d-lg-none d-block">
+                    <div class="mobile-menu-form mb-5">
+                        <div class="input-with-btn d-flex flex-column">
+                            <button type="button" class="eg-btn btn--primary btn--sm">Login</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="nav-right d-flex align-items-center">
+            @if (User.Identity.IsAuthenticated && HttpContextAccessor.HttpContext.Session.GetInt32("UserId") != null)
+            {
+                <div class="eg-btn d-none d-lg-block btn btn-danger" style="margin-right:5px;">
+                    <a asp-action="Logout" asp-controller="Account">Logout</a>
+                </div>
+            }
+            else
+            {
+                <div class="eg-btn btn--primary header-btn" style="margin-right:5px;">
+                    <a asp-action="Login" asp-controller="Account">Login</a>
+                </div>
+                <div class="eg-btn btn--primary header-btn" style="margin-right:5px;">
+                    <a asp-action="Register" asp-controller="Account">Register</a>
+                </div>
+            }
+
+            <div class="mobile-menu-btn d-lg-none d-block">
+                <i class="bx bx-menu"></i>
+            </div>
+        </div>
+    </header>
+    <div>
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer>
+        <div class="footer-top">
+            <div class="container">
+                <div class="row gy-5">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="footer-item">
+                            <a asp-action="Index" asp-controller="Home"><img alt="image" src="~/assets/images/bg/footer-logo.png"></a>
+                            <p>
+                                Auction sites present consumers with a thrilling, competitive way to buy the goods and services they need most.
+                            </p>
+                            <form>
+                                <div class="input-with-btn d-flex jusify-content-start align-items-strech">
+                                    <input type="text" placeholder="Enter your email">
+                                    <button type="button">
+                                        <img alt="image"
+                                             src="~/assets/images/icons/send-icon.svg">
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 d-flex justify-content-lg-center">
+                        <div class="footer-item">
+                            <h5>Navigation</h5>
+                            <ul class="footer-list">
+                                <li><a asp-action="Auctions" asp-controller="Home">All Auctions</a></li>
+                                <li><a asp-action="Works" asp-controller="Home">How It Works</a></li>
+                                <li><a href="">My Account</a></li>
+                                <li><a asp-action="About" asp-controller="Home">About Company</a></li>
+                                <li><a href="">Our News Feed</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 d-flex justify-content-lg-center">
+                        <div class="footer-item">
+                            <h5>Help & FAQs</h5>
+                            <ul class="footer-list">
+                                <li><a href="">Help Center</a></li>
+                                <li><a href="">Customer FAQs</a></li>
+                                <li><a href="">Terms and Conditions</a></li>
+                                <li><a href="">Security Information</a></li>
+                                <li><a href="">Merchant Add Policy</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row d-flex align-items-center g-4">
+                    <div class="col-lg-6 d-flex justify-content-lg-start justify-content-center">
+                        <p>
+                            Copyright 2022 <a href="#">Bid Out</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="~/assets/js/jquery-3.6.0.min.js"></script>
+    <script src="~/assets/js/jquery-ui.js"></script>
+    <script src="~/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/wow.min.js"></script>
+    <script src="~/assets/js/swiper-bundle.min.js"></script>
+    <script src="~/assets/js/slick.js"></script>
+    <script src="~/assets/js/jquery.nice-select.js"></script>
+    <script src="~/assets/js/odometer.min.js"></script>
+    <script src="~/assets/js/viewport.jquery.js"></script>
+    <script src="~/assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/assets/js/main.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+
+</html>

@@ -1,0 +1,265 @@
+﻿@model BidHistoryViewModel
+@{
+    ViewData["Title"] = "Auction Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #description ul {
+        list-style: disc;
+    }
+
+    .author {
+        background: #f1f1f1;
+        border-radius: 5px;
+        padding: 30px;
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 50px;
+        align-items:center;
+    }
+
+    .author-image img {
+        min-width: 140px;
+    }
+</style>
+
+<div class="inner-banner">
+    <div class="container">
+        <h2 class="inner-banner-title wow fadeInLeft" data-wow-duration="1s" data-wow-delay=".4s" style="visibility: visible; animation-duration: 1s; animation-delay: 0.4s; animation-name: fadeInLeft;">
+            Auction Details
+        </h2>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Auction Details</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="auction-details-section pt-120">
+    <img alt="image" src="~/assets/images/bg/section-bg.png" class="img-fluid section-bg-top">
+    <img alt="image" src="~/assets/images/bg/section-bg.png" class="img-fluid section-bg-bottom">
+    <div class="container">
+        <div class="row g-4 mb-50">
+            <div class="col-xl-6 col-lg-7 d-flex flex-row align-items-start justify-content-lg-start justify-content-center flex-md-nowrap flex-wrap gap-4">
+
+                <div class="tab-content mb-4  justify-content-center  wow fadeInUp"
+                     data-wow-duration="1.5s" data-wow-delay=".4s">
+                    <div class="tab-pane big-image fade show active" id="gallery-img1">
+                        <img id="coverphoto" alt="image" src="" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-5">
+                <div class="product-details-right  wow fadeInDown" data-wow-duration="1.5s" data-wow-delay=".2s">
+                    <h3 id="title"></h3>
+                    <p id="shortdesc" class="para">
+
+                    </p>
+                    <h4>Bidding Price: <span id="price"></span></h4>
+                    <div class="bid-form">
+                        <div class="form-title">
+                            <h5>Bid Now</h5>
+                            <p id="minbid"></p>
+                        </div>
+                        @using (Html.BeginForm("PlaceBid", "Bid", FormMethod.Post, new { onsubmit = "return SubmitForm(this)" }))
+                        {
+                            <input type="hidden" id="auctionId" name="auctionId" />
+                            <div class="form-inner gap-2">
+                                <input type="text" id="bidAmount" name="bidAmount" onkeypress="return validateNumber(event)" placeholder="00.00 Rs" required>
+                                <button class="eg-btn btn--primary btn--sm" type="submit" id="placeBid">Place Bid</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row d-flex g-4">
+            <div class="col-lg-12">
+                <ul class="nav nav-pills d-flex flex-row justify-content-start gap-sm-4 gap-3 mb-45 wow fadeInDown"
+                    data-wow-duration="1.5s" data-wow-delay=".2s" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active details-tab-btn" id="pills-home-tab" data-bs-toggle="pill"
+                                data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home"
+                                aria-selected="true">
+                            Description
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link details-tab-btn" id="pills-bid-tab" data-bs-toggle="pill"
+                                data-bs-target="#pills-bid" type="button" role="tab" aria-controls="pills-bid"
+                                aria-selected="false">
+                            Biding History
+                        </button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    <div style="margin-bottom:50px;" class="tab-pane fade show active wow fadeInUp" data-wow-duration="1.5s"
+                         data-wow-delay=".2s" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                        <div id="description" class="describe-content bid-list-area pt-3">
+                            <h4>How can have anything you ant in life if you ?</h4>
+                            <p class="para">
+                                If you’ve been following the crypto space, you’ve likely heard of
+                                Non-Fungible Tokens (Biddings), more popularly referred to as ‘Crypto Collectibles.’
+                                The world of Biddings is growing rapidly. It seems there is no slowing down of these
+                                assets as they continue to go up in price. This growth comes with the opportunity
+                                for people to start new businesses to create and capture value. The market is open
+                                for players in every kind of field. Are you a collector.
+                            </p>
+                            <p class="para">
+                                But getting your own auction site up and running has always required
+                                learning complex coding langua ges, or hiring an expensive design firm for thousands
+                                of dollars and months of work.
+                            </p>
+                            <ul class="describe-list">
+                                <li>
+                                    <a href="#">
+                                        Amet consectetur adipisicing elit. Maxime reprehenderit quaerat,
+                                        velit rem atque vel impedit! Expensive Design.
+                                    </a>
+                                </li>
+                                <li><a href="#">Consectetur adipisicing elit. Maxime reprehenderit quaerat</a></li>
+                                <li>
+                                    <a href="#">Fuga magni veritatis ad temporibus atque adipisci nisi rerum...</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div style="margin-bottom:50px;" class="tab-pane fade" id="pills-bid" role="tabpanel" aria-labelledby="pills-bid-tab">
+                        <div class="bid-list-area">
+                            <ul class="bid-list" id="bid-list">
+                                @if (Model == null || Model.bids.Count() == 0)
+                                {
+                                    <li>
+                                        <div class="row d-flex gy-4 mb-60">
+                                            <h3 class="text-start alert alert-info">No, bidding history Found!</h3>
+                                        </div>
+                                    </li>
+                                }
+                                else
+                                {
+                                     @foreach (var bid in Model.bids){
+                                        <li>
+                                            <div class="row d-flex align-items-center">
+                                                <div class="col-7">
+                                                    <div class="bidder-area">
+                                                        <div class="bidder-img">
+                                                            <img alt="image" width="40" height="40" src="~/Dashboard/img/profile.png">
+                                                        </div>
+                                                        <div class="bidder-content">
+                                                            <a>
+                                                                <h6>@bid.User.FirstName</h6>
+                                                            </a>
+                                                            <p>@bid.BidAmount Rs</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-5 text-end">
+                                                    <div class="bid-time">
+                                                        <p>@bid.Timestamp.ToString()</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                     }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container pt-120">
+    <div class="row d-flex g-4">
+        <div class="col-lg-8 col-sm-12">
+            <div class="author gap-4 flex-md-nowrap flex-wrap">
+                <div class="author-image">
+                    <img alt="image" src="/assets/images/user.png" width="80" height="80" class="img-fluid">
+                </div>
+                <div class="author-detials justify-content-center text-md-start text-center">
+                    <h5>Owner Name</h5>
+                    <h5 id="username"></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+
+    <script>
+        var minbid, bidamount;
+
+        $(document).ready(function () {
+
+            $.ajax({
+                url: '@Url.Action("ViewAuctionDetails", "Home")',
+                type: "GET",
+                data: { id: @ViewBag.auctionId},
+                contentType: "application/json; charset=utf-8",
+                datatype: JSON,
+                success: function (data) {
+                    $(data).each(function () {
+
+                        $("#auctionId").val(this.id);
+                        $("#title").html(this.title);
+                        $('#shortdesc').html(this.shortDesc);
+                        $("#price").html(this.price);
+                        $("#minbid").append('<p>Bid Amount: Minimum Bid: ' + this.price + 'Rs </p>');
+                        $("#coverphoto").attr("src", this.coverPhoto);
+                        $("#description").html(this.description);
+                        $("#username").append(this.user.firstName + "&nbsp;" + this.user.lastName);
+
+                        minbid = parseInt($("#price").html());
+                        bidamount = parseInt($("#bidAmount").val());
+                    });
+                },
+                error: function (data) {
+                    console.log("Something wrong occured, please try again later!");
+                }
+
+            });
+        })
+
+        function SubmitForm(form) {
+                $.ajax({
+                    type: "post",
+                    url: form.action,
+                    data: $(form).serialize()
+                })
+                .done(function (response) {
+                    debugger;
+                    if (response.success) {
+                        $('#bidAmount').val("");
+                        Swal.fire({
+                            icon: "success",
+                            title: "Success",
+                            text: response.message
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: response.message
+                        })
+
+                    }
+                })
+            return false;
+        }
+
+        function validateNumber(e) {
+            const pattern = /^[0-9]$/;
+            return pattern.test(e.key)
+        }
+
+    </script>
+
+}

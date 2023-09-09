@@ -1,0 +1,76 @@
+﻿
+@{
+    ViewData["Title"] = "User Dashboard";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<!-- Sale & Revenue Start -->
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-sm-6 col-xl-6">
+            <div class="bg-success rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-gavel fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Today Bids</p>
+                    @if (ViewBag.TodayBids != null)
+                    {
+                        <h6 class="mb-0 fw-bold">@ViewBag.TodayBids</h6>
+                    }
+                    else
+                    {
+                        <h6 class="mb-0 fw-bold">0</h6>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-6">
+            <div class="bg-warning rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-gavel fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Total Bids</p>
+                    @if (ViewBag.TotalBids != null)
+                    {
+                        <h6 class="mb-0 fw-bold">@ViewBag.TotalBids</h6>
+                    }
+                    else
+                    {
+                        <h6 class="mb-0 fw-bold">0</h6>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-6">
+            <div class="bg-danger rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-shopping-bag fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Today Auctions</p>
+                    @if (ViewBag.TodayAuctions != null)
+                    {
+                        <h6 class="mb-0 fw-bold">@ViewBag.TodayAuctions</h6>
+                    }
+                    else
+                    {
+                        <h6 class="mb-0 fw-bold">0</h6>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-6">
+            <div class="bg-danger rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-shopping-bag fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Total Auctions</p>
+                    @if (ViewBag.TotalAuctions != null)
+                    {
+                        <h6 class="mb-0 fw-bold">@ViewBag.TotalAuctions</h6>
+                    }
+                    else
+                    {
+                        <h6 class="mb-0 fw-bold">0</h6>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Sale & Revenue End -->

@@ -1,0 +1,87 @@
+﻿
+@{
+    ViewData["Title"] = "Auction";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    label {
+        color: #000;
+    }
+
+    .dataTables_info {
+        color: #000 !important;
+    }
+</style>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row pt-4 mb-3">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table id="auctionTable" class="display table table-hover table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Starting Date</th>
+                            <th>Ending Date</th>
+                            <th>Location</th>
+                            <th>User</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        var datatable;
+
+        $(document).ready(function () {
+            loadDataTable();
+        });
+
+        function loadDataTable() {
+
+            datatable = $("#auctionTable").DataTable({
+                "ajax": {
+                    "url": "@Url.Action("Showallauctions", "Admin")",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    {
+                        "data": "coverPhoto", "render": function (data) {
+                            return `<img src=${data} height="100px" width="100px" class="img-responsive" />`
+                        }
+                    },
+                    { "data": "title" },
+                    { "data": "category.name" },
+                    { "data": "price" },
+                    { "data": "startDate" },
+                    { "data": "endDate" },
+                    { "data": "location.name" },
+                    { "data": "user.email" },
+                    { "data": "status" },
+                    {
+                        "data": "id", "render": function (data) {
+                            return `
+                                    <div class="d-flex">
+                                       <a href="/Admin/Auctiondetails?id=${data}"  class="btn btn-info btn-small" style="color:#fff;"> <i class="fa fa-pencil-alt"></i></a>
+                                    </div>
+                                  `
+                        }
+                    }
+
+                ]
+            });
+        }
+
+    </script>
+}

@@ -1,0 +1,131 @@
+﻿@model AuctionViewModel
+@{
+    ViewData["Title"] = "Auctiondetails";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .select2-results__option {
+        color: #000 !important;
+    }
+</style>
+
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row pt-4 mb-3">
+        <div class="col-12">
+            <h3 class="text-dark">Auction Details</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <form enctype="multipart/form-data">
+            <input type="hidden" asp-for="auctions.Id" id="bidid" />
+            <div class="row">
+                <div class="col-lg-12 mb-3">
+                    <label class="form-label text-dark">Select Category</label>
+                    <select id="categories" asp-for="auctions.CategoryId" asp-items="@Model.categories" class="form-select w-100 text-dark mb-3">
+                        <option disabled selected>---Select Category---</option>
+                    </select>
+                    <span asp-validation-for="auctions.CategoryId" class="text-danger"></span>
+                </div>
+                <div class="col-xl-6 col-lg-12 col-md-6 mb-3">
+                    <label class="form-label text-dark">Title</label>
+                    <input asp-for="auctions.Title" class="form-control" id="Title" required autocomplete="off">
+                    <span asp-validation-for="auctions.Title" class="text-danger"></span>
+                </div>
+                <div class="col-xl-6 col-lg-12 col-md-6 mb-3">
+                    <label class="form-label text-dark">Price</label>
+                    <input asp-for="auctions.Price" class="form-control" id="Price" required autocomplete="off">
+                    <span asp-validation-for="auctions.Price" class="text-danger"></span>
+                </div>
+                <div class="col-xl-6 col-lg-12 col-md-6 mb-3">
+                    <div class="mb-3">
+                        <label class="form-label text-dark">Starting Date</label>
+                        <input asp-for="auctions.StartDate" class="form-control" id="StartDate" required autocomplete="on">
+                        <span asp-validation-for="auctions.StartDate" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-12 col-md-6 mb-3">
+                    <label class="form-label text-dark">Ending Date</label>
+                    <input asp-for="auctions.EndDate" class="form-control" id="EndDate" required autocomplete="on">
+                    <span asp-validation-for="auctions.EndDate" class="text-danger"></span>
+                </div>
+                <div class="col-12 mb-3">
+                    <label class="form-label text-dark">Select Image</label>
+                    <input class="form-control mb-3" type="file" asp-for="auctions.CoverPhoto" name="file" id="uploadBox" class="form-control" accept="image/*" />
+                    <div class="owner">
+                        <img src="@Model.auctions.CoverPhoto" id="profile-img-tag" class="img-responsive mb-2" width="200px" height="200px" asp-append-version="true" accept="image/*" />
+                    </div>
+                    <span asp-validation-for="auctions.CoverPhoto" class="text-danger"></span>
+                </div>
+                <div class="col-12 mb-3">
+                    <label class="form-label text-dark">Select Location</label>
+                    <select id="locations" asp-for="auctions.LocationId" asp-items="@Model.locations" class="form-select text-dark mb-3">
+                        <option disabled selected>---Select Location---</option>
+                    </select>
+                    <span asp-validation-for="auctions.LocationId" class="text-danger"></span>
+                </div>
+                <div class="col-12 mb-3">
+                    <label class="form-label text-dark">Description</label>
+                    <textarea class="form-control mb-3 ckeditor" id="Description" asp-for="auctions.Description" rows="3"></textarea>
+                    <span asp-validation-for="auctions.Description" class="text-danger"></span>
+                </div>
+                <div class="col-12 mb-3">
+                    <label class="form-label text-dark">Status</label>
+                    <select asp-for="auctions.Status" id="Status" class="form-select w-100 text-dark mb-3">
+                        <option>Pending</option>
+                        <option>Approved</option>
+                        <option>Rejected</option>
+                    </select>
+                </div>
+                <div class="col-xl-6 col-lg-12 col-md-6 mb-3">
+                    <button type="button" id="btnsave" onClick="return ChangeStatus()" class="text-white btn btn-success">
+                        Change Status
+                    </button>
+                    <a asp-action="Auction" asp-controller="Admin" class="btn btn-danger btn-small" style="color:#fff;">
+                        Back
+                    </a>
+
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+
+@section Scripts{
+    <script>
+
+            function ChangeStatus() {
+                
+                var id = $("#bidid").val();
+                var status = $("#Status option:selected").text();
+
+                debugger;
+                $.ajax({
+                    type: 'POST',
+                    data: { auctionId: id, status: status },
+                    url: '@Url.Action("ChangeStatus", "Admin")',
+                    success: function (data) {
+                        if (data.success) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Success",
+                                text: data.message
+                            });
+                            window.setTimeout(function () {
+                                window.location.href = '@Url.Action("Auction", "Admin")';
+                            }, 1000);
+                        }
+                    },
+                    error: function (data) {
+                        console.log("fail");
+                    }
+                });
+            };
+       
+    </script>
+}
+

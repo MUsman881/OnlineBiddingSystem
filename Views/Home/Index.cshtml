@@ -1,0 +1,216 @@
+﻿@{
+    ViewData["Title"] = "Bidout";
+}
+
+<div class="hero-area hero-style-one">
+    <div class="hero-main-wrapper position-relative">
+        <div class="swiper banner1">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div class="slider-bg-1">
+                        <div class="container">
+                            <div class="row d-flex justify-content-center align-items-center">
+                                <div class="col-xl-10 col-lg-10">
+                                    <div class="banner1-content">
+                                        <span>Welcome To Auction House</span>
+                                        <h1>Build, sell & collect digital items.</h1>
+                                        <p>
+                                            Nulla facilisi. Maecenas ac tellus ut ligula interdum convallis. Nullam
+                                            dapibus on erat in dolor posuere, none hendrerit lectus ornare.
+                                            Suspendisse sit amet turpina sagittis, ultrices dui et, aliquam none
+                                            hendrerit lectus.
+                                        </p>
+                                        <a href="" class="eg-btn btn--primary btn--lg">
+                                            Start
+                                            Exploring
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="slider-bg-2">
+                        <div class="container">
+                            <div class="row d-flex justify-content-center align-items-center">
+                                <div class="col-xl-10 col-lg-10">
+                                    <div class="banner1-content">
+                                        <span>Welcome To Auction House</span>
+                                        <h2>Purchase Dream Product & Try.</h2>
+                                        <p>
+                                            Nulla facilisi. Maecenas ac tellus ut ligula interdum convallis. Nullam
+                                            dapibus on erat in dolor posuere, none hendrerit lectus ornare.
+                                            Suspendisse sit amet turpina sagittis, ultrices dui et, aliquam none
+                                            hendrerit lectus.
+                                        </p>
+                                        <a href="" class="eg-btn btn--primary btn--lg">
+                                            Start
+                                            Exploring
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-one-pagination d-flex justify-content-center flex-column align-items-center gap-3"></div>
+    </div>
+</div>
+
+<div class="advance-search">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-12 col-md-12 align-content-center">
+                <form asp-action="SearchAuction" asp-controller="Search" method="Get">
+                    <div class="form-row">
+                        <div class="form-group col-xl-9 col-lg-9 col-md-6">
+                            <input type="text" class="form-control my-2 my-lg-1" id="q" name="q" placeholder="What are you looking for">
+                        </div>
+                        <div class="form-group col-xl-3 col-lg-3 col-md-6 align-self-center">
+                            <button type="submit"  class="btn btn-primary active w-100">Search Now</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="category-section pt-120 pb-120">
+    <div class="container position-relative">
+        <div class="row d-flex justify-content-center">
+            <div class="col-sm-12 col-md-10 col-lg-8 col-xl-6">
+                <div class="section-title1">
+                    <h2>All Categories</h2>
+                </div>
+            </div>
+            <div class="swiper category1-slider">
+                <div class="swiper-wrapper category">
+
+                </div>
+            </div>
+        </div>
+        <div class="slider-arrows text-center d-xl-flex d-none  justify-content-end">
+            <div class="category-prev1 swiper-prev-arrow" tabindex="0" role="button" aria-label="Previous slide">
+                <i class="bx bx-chevron-left"></i>
+            </div>
+            <div class="category-next1 swiper-next-arrow" tabindex="0" role="button" aria-label="Next slide">
+                <i class="bx bx-chevron-right"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="live-auction pb-120">
+    <img alt="image" src="/assets/images/bg/section-bg.png" class="img-fluid section-bg">
+    <div class="container position-relative">
+        <img alt="image" src="/assets/images/bg/dotted1.png" class="dotted1">
+        <img alt="image" src="/assets/images/bg/dotted1.png" class="dotted2">
+        <div class="row d-flex justify-content-center">
+            <div class="col-sm-12 col-md-10 col-lg-8 col-xl-6">
+                <div class="section-title1">
+                    <h2>Live Auction</h2>
+                    <p class="mb-0">
+                        Explore on the world's best & largest Bidding marketplace with our beautiful
+                        Bidding
+                        products. We want to be a part of your smile, success and future growth.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div id="auctions" class="row gy-4 mb-60 d-flex justify-content-center">
+        </div>
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-4 text-center">
+                <a href="@Url.Action("Auctions")" class="eg-btn btn--primary btn--md mx-auto">View All</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            getCategories();
+            getAuctions();
+
+        })
+
+        function getAuctions(){
+            $.ajax({
+                url: '@Url.Action("GetAllAuctions", "Home")',
+                dataType: 'json',
+                success: function (result) {
+
+                    for (var i = 0; i < result.data.length; i++) {
+
+                        var id = result.data[i].id;
+                        var endDate = (result.data[i].endDate);
+
+                        var timerid = i;
+                        makeTimer(timerid, endDate);
+
+                        $('#auctions').append('<div class="col-lg-4 col-md-6 col-sm-10"><div data-wow-duration="1000ms" data-wow-delay="100ms" class="eg-card auction-card1 wow animate fadeInDown"><div class="auction-img"> <img alt="image" src=' + result.data[i].coverPhoto + '> <div class="auction-timer" id="auction-timer' + timerid + '"><div class="countdown"><h4><span class="hours"></span>H : <span class="minutes"></span>M : <span class="seconds"></span>S</h4></div></div><div class="author-area"><div class="author-emo"><img alt="image" src="/assets/images/icons/smile-emo.svg"></div><div class="author-name"><span>by ' + result.data[i].user.firstName + '</span> </div></div></div>  <div class="auction-content"> <h4><a href="@Url.Action("AuctionDetails", "Home")?id=' + id + '">' + result.data[i].title + '</a></h4> <p>Bidding Price : <span><span>' + result.data[i].price + '</span></span></p><div class="auction-card-bttm"><a href="@Url.Action("AuctionDetails", "Home")?id=' + id + '" class="eg-btn btn--primary btn--sm">Place a Bid</a> </div></div>   </div></div>');
+                    }
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+        }
+
+        function getCategories(){
+
+             $.ajax({
+                url: '@Url.Action("GetAllCategories", "Home")',
+                dataType: 'json',
+                success: function (result) {
+                    for (var i = 0; i < result.data.length; i++) {
+                        var name = result.data[i].name;
+                        $('.category').append('<div class="swiper-slide"><div class="eg-card category-card1 wow animate fadeInDown" data-wow-duration="1000ms" data-wow-delay="100ms"><a href="@Url.Action("SearchAuction","Search")?category=' + name + '"><h5>' + name + '</h5></a></div></div>');
+                    }
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+
+            })
+        }
+
+        function makeTimer(id,endtime) {
+            var endTime = new Date(endtime);
+            var endTime = (Date.parse(endTime)) / 1000;
+            var now = new Date();
+            var now = (Date.parse(now) / 1000);
+            var timeLeft = endTime - now;
+            var days = Math.floor(timeLeft / 86400);
+            var hours = Math.floor((timeLeft - (days * 86400)) / 3600);
+            var minutes = Math.floor((timeLeft - (days * 86400) - (hours * 3600)) / 60);
+            var seconds = Math.floor((timeLeft - (days * 86400) - (hours * 3600) - (minutes * 60)));
+
+            if (hours < "10") {
+                hours = "0" + hours;
+            }
+            if (minutes < "10") {
+                minutes = "0" + minutes;
+            }
+            if (seconds < "10") {
+                seconds = "0" + seconds;
+            }
+            const row = $('#auction-timer' + id);
+
+            row.find('.hours').html(hours);
+            row.find('.minutes').html(minutes);
+            row.find('.seconds').html(seconds);
+
+            setInterval(() => makeTimer(id,endtime));
+        }
+    </script>
+}

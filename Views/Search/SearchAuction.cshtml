@@ -1,0 +1,57 @@
+﻿@model SearchAuctionViewModel
+@{
+    ViewData["Title"] = "Search Results";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="live-auction pt-120 pb-120">
+    <img alt="image" src="/assets/images/bg/section-bg.png" class="img-fluid section-bg">
+    <div class="container position-relative">
+        <img alt="image" src="/assets/images/bg/dotted1.png" class="dotted1">
+        <img alt="image" src="/assets/images/bg/dotted1.png" class="dotted2">
+
+        @if (Model == null || Model.auctions.Count() == 0)
+        {
+            <div class="row d-flex gy-4 mb-60">
+                <h3 class="text-start alert alert-info">Oops, No Result Found!</h3>
+            </div>
+        }
+        else
+        {
+            <div class="row gy-4 mb-60 d-flex">
+                @foreach (var auction in Model.auctions)
+                {
+                    <div class="col-lg-4 col-md-6 col-sm-10 ">
+                        <div data-wow-duration="1.5s" data-wow-delay="0.2s" class="eg-card auction-card1 wow fadeInDown" style="visibility: visible; animation-duration: 1.5s; animation-delay: 0.2s; animation-name: fadeInDown;">
+                            <div class="auction-img">
+                                <img alt="image" src="@auction.CoverPhoto">
+                                <div class="author-area">
+                                    <div class="author-emo">
+                                        <img alt="image" src="/assets/images/icons/smile-emo.svg">
+                                    </div>
+                                    <div class="author-name">
+                                        <span>by @auction.User.FirstName</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="auction-content h-100">
+                                <h4><a href="@Url.Action("AuctionDetails", "Home")?id=@auction.Id">@auction.Title</a></h4>
+                                <p>Bidding Price : <span>@auction.Price</span>Rs</p>
+                                <p>Ending Date: @auction.EndDate </p>
+                                <div class="auction-card-bttm">
+                                    <a href="@Url.Action("AuctionDetails", "Home")?id=@auction.Id" class="eg-btn btn--primary btn--sm">Place a Bid</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+
+
+
+
+

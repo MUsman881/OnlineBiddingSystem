@@ -1,0 +1,132 @@
+﻿@model AuctionViewModel
+@{
+    ViewData["Title"] = "Create Auction";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<style>
+    .select2-results__option {
+        color: #000 !important;
+    }
+</style>
+
+
+<div class="container-fluid pt-4 px-4">
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <h3 class="card-header text-dark font-monospace">Add new auction</h3>
+                <div class="card-body">
+                    <form asp-action="CreateAuction" asp-controller="User" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="auctions.Id" />
+                        <input type="hidden" id="bids" asp-for="auctions.Bids" />
+                        <div class="row">
+                            <div class="col-lg-12 mb-3">
+                                <label class="form-label text-dark">Select Category</label>
+                                <select id="categories" asp-for="auctions.CategoryId" asp-items="@Model.categories" class="form-select w-100 text-dark mb-3" required>
+                                    <option disabled selected>---Select Category---</option>
+                                </select>
+                                <span asp-validation-for="auctions.CategoryId" class="text-danger"></span>
+                            </div>
+                            <div class="col-xl-6 col-lg-12 col-md-6 mb-3">
+                                <label class="form-label text-dark">Title</label>
+                                <input asp-for="auctions.Title" class="form-control" id="Title" required autocomplete="off">
+                                <span asp-validation-for="auctions.Title" class="text-danger"></span>
+                            </div>
+                            <div class="col-xl-6 col-lg-12 col-md-6 mb-3">
+                                <label class="form-label text-dark">Price</label>
+                                <input asp-for="auctions.Price" class="form-control" id="Price" required autocomplete="off">
+                                <span asp-validation-for="auctions.Price" class="text-danger"></span>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label text-dark">Short Description</label>
+                                <textarea class="form-control mb-3" id="ShortDesc" asp-for="auctions.ShortDesc" rows="3" required></textarea>
+                                <span asp-validation-for="auctions.ShortDesc" class="text-danger"></span>
+                            </div>
+                            <div class="col-xl-6 col-lg-12 col-md-6 mb-3">
+                                <div class="mb-3">
+                                    <label class="form-label text-dark">Starting Date</label>
+                                    <input asp-for="auctions.StartDate" class="form-control" id="StartDate" required autocomplete="on">
+                                    <span asp-validation-for="auctions.StartDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-12 col-md-6 mb-3">
+                                <label class="form-label text-dark">Ending Date</label>
+                                <input asp-for="auctions.EndDate" class="form-control" id="EndDate" required autocomplete="on">
+                                <span asp-validation-for="auctions.EndDate" class="text-danger"></span>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label text-dark">Select Image</label>
+                                <input class="form-control mb-3" type="file" name="file" id="uploadBox" accept="image/*" />
+                                <div class="owner rounded-5">
+                                    @if(Model != null){
+                                        <img src="~/assets/images/insert.png" id="profile-img-tag" class="img-responsive img-thumbnail  mb-2" width="200px" height="200px" asp-append-version="true" accept="image/*" />
+                                    }
+                                    else if(Model.auctions != null)
+                                    {
+                                        <img src="@Model.auctions.CoverPhoto" id="profile-img-tag" class="img-responsive img-thumbnail  mb-2" width="200px" height="200px" asp-append-version="true" accept="image/*" />
+                                    }
+                                </div>
+                                <span asp-validation-for="auctions.CoverPhoto" class="text-danger"></span>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label text-dark">Select Location</label>
+                                <select id="locations" asp-for="auctions.LocationId" asp-items="@Model.locations" class="form-select w-100 text-dark mb-3" required>
+                                    <option disabled selected>---Select Location---</option>
+                                </select>
+                                <span asp-validation-for="auctions.LocationId" class="text-danger"></span>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label text-dark">Description</label>
+                                <textarea class="form-control mb-3 ckeditor" id="Description" asp-for="auctions.Description" rows="3" required></textarea>
+                                <span asp-validation-for="auctions.Description" class="text-danger"></span>
+                            </div>
+                            <div class="col-xl-6 col-lg-12 col-md-6 mb-3">
+                                <button type="submit" id="btnsave" class="text-white btn btn-success">
+                                    Save Changes
+                                </button>
+                                <a asp-action="Auction" asp-controller="User" class="btn btn-danger btn-small" style="color:#fff;">
+                                    Back
+                                </a>
+
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            CKEDITOR.replace('#Description');
+
+            $("#uploadBox").change(function () {
+                readURL(this);
+            });
+
+        });
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#profile-img-tag').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+            else {
+                reader.onload = function (e) {
+                    $('#profile-img-tag').attr('src');
+                }
+            }
+        }
+
+    </script>
+}

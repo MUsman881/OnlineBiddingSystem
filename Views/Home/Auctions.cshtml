@@ -1,0 +1,94 @@
+﻿@{
+    ViewData["Title"] = "All Auctions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="inner-banner">
+    <div class="container">
+        <h2 class="inner-banner-title wow fadeInLeft" data-wow-duration="1s" data-wow-delay=".2s" style="visibility: visible; animation-duration: 1.5s; animation-delay: 0.2s; animation-name: fadeInLeft;">Live Auction</h2>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Live Auction</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="live-auction pt-120 pb-120">
+    <img alt="image" src="/assets/images/bg/section-bg.png" class="img-fluid section-bg">
+    <div class="container position-relative">
+        <img alt="image" src="/assets/images/bg/dotted1.png" class="dotted1">
+        <img alt="image" src="/assets/images/bg/dotted1.png" class="dotted2">
+
+        <div id="auctions" class="row gy-4 mb-60 d-flex justify-content-center">
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+
+        $(document).ready(function () {
+            getAuctions();
+        })
+
+        function getAuctions() {
+            $.ajax({
+                url: '@Url.Action("GetAllAuctions", "Home")',
+                dataType: 'json',
+                success: function (result) {
+                    
+                    if(result != null || result.data.length > 0)
+                    {
+                        for (var i = 0; i < result.data.length; i++) {
+                            var id = result.data[i].id;
+                            var endDate = (result.data[i].endDate);
+
+                            var timerid = i;
+                            makeTimer(timerid, endDate);
+
+                            $('#auctions').append('<div class="col-lg-4 col-md-6 col-sm-10"><div data-wow-duration="100ms" data-wow-delay="100ms" class="eg-card auction-card1 wow animate fadeInDown"><div class="auction-img"> <img alt="image" src=' + result.data[i].coverPhoto + '> <div class="auction-timer" id="auction-timer' + timerid + '"><div class="countdown"><h4><span class="hours"></span>H : <span class="minutes"></span>M : <span class="seconds"></span>S</h4></div></div><div class="author-area"><div class="author-emo"><img alt="image" src="/assets/images/icons/smile-emo.svg"></div><div class="author-name"><span>by ' + result.data[i].user.firstName + '</span> </div></div></div>  <div class="auction-content"> <h4><a href="@Url.Action("AuctionDetails", "Home")?id=' + id + '">' + result.data[i].title + '</a></h4> <p>Bidding Price : <span><span>' + result.data[i].price + '</span></span></p><div class="auction-card-bttm"><a href="@Url.Action("AuctionDetails", "Home")?id=' + id + '" class="eg-btn btn--primary btn--sm">Place a Bid</a> </div></div>   </div></div>');
+                        }
+                    }
+                    else
+                    {
+                        $('#auctions').append('<h3 class="text-start alert alert-info">Sorry, no live auctions are available right now.</h3>');
+                    }
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+        }
+
+        function makeTimer(id, endtime) {
+            var endTime = new Date(endtime);
+            var endTime = (Date.parse(endTime)) / 1000;
+            var now = new Date();
+            var now = (Date.parse(now) / 1000);
+            var timeLeft = endTime - now;
+            var days = Math.floor(timeLeft / 86400);
+            var hours = Math.floor((timeLeft - (days * 86400)) / 3600);
+            var minutes = Math.floor((timeLeft - (days * 86400) - (hours * 3600)) / 60);
+            var seconds = Math.floor((timeLeft - (days * 86400) - (hours * 3600) - (minutes * 60)));
+
+            if (hours < "10") {
+                hours = "0" + hours;
+            }
+            if (minutes < "10") {
+                minutes = "0" + minutes;
+            }
+            if (seconds < "10") {
+                seconds = "0" + seconds;
+            }
+            const row = $('#auction-timer' + id);
+
+            row.find('.hours').html(hours);
+            row.find('.minutes').html(minutes);
+            row.find('.seconds').html(seconds);
+
+            setInterval(() => makeTimer(id, endtime));
+        }
+    </script>
+}

@@ -1,0 +1,139 @@
+﻿@{
+    ViewData["Title"] = "Auctions";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<style>
+    label {
+        color: #000;
+    }
+    .dataTables_info{
+        color:#000 !important;    
+    }
+</style>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row pt-4 mb-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <a asp-action="CreateAuction" asp-controller="User" class="btn btn-info text-white">
+                        <i class="fas fa-plus-circle text-white"></i>
+                        Add New Auction
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="auctionTable" class="display table table-hover table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Location</th>
+                                    <th>Status</th>
+                                    <th>Bids</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        var datatable;
+
+        $(document).ready(function () {
+            loadDataTable();
+        });
+
+        function loadDataTable() {
+
+            datatable = $("#auctionTable").DataTable({
+                "ajax": {
+                    "url": "/User/ShowAuctions",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    {
+                        "data": "coverPhoto", "render": function (data) {
+                            return `<img src=${data} height="100px" width="100px" class="img-responsive img-fluid" />`
+                        }
+                    },
+                    { "data": "title" },
+                    { "data": "category.name" },
+                    { "data": "price" },
+                    { "data": "startDate" },
+                    { "data": "endDate" },
+                    { "data": "location.name" },
+                    { "data": "status" },
+                    { "data": "bids" },
+                    {
+                        "data": "id", "render": function (data) {
+                            return `
+                              <div class="d-flex">
+                                   <a href="@Url.Action("CreateAuction", "User")?id=${data}"  class="btn btn-info btn-small mr-1" style="color:#fff;"> <i class="fa fa-pencil-alt"></i></a>
+                                    <button type="button" class="btn btn-danger btn-small" onClick="return deleteAuction('${data}')">
+                                      <i class="fas fa-trash mr-1"></i>
+                                    </button>
+                             </div>
+                                  `
+                        }
+                    }
+
+                ]
+            });
+        }
+
+        function deleteAuction(auctionId) {
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "@Url.Action("DeleteAuction", "User")",
+                        data: { id: auctionId },
+                        success: function (data) {
+                            if (data.success) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Success",
+                                    text: data.message
+                                });
+                                datatable.ajax.reload();
+                            }
+                            else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: data.message
+                                });
+                            }
+                        }
+                    })
+                }
+
+            });
+
+        }
+
+    </script>
+}

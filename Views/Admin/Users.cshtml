@@ -1,0 +1,85 @@
+﻿@model User
+@{
+    ViewData["Title"] = "Users";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    label {
+        color: #000;
+    }
+
+    .dataTables_info {
+        color: #000 !important;
+    }
+</style>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row pt-4 mb-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-dark">All Users</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="userTable" class="display table table-hover table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        var datatable;
+
+        $(document).ready(function () {
+            loadDataTable();
+        });
+
+        function loadDataTable() {
+
+            datatable = $("#userTable").DataTable({
+                "ajax": {
+                    "url": "@Url.Action("ShowAllUsers", "Admin")",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    { "data": "id" },
+                    { "data": "firstName" },
+                    { "data": "lastName" },
+                    { "data": "email" },
+                    { "data": "status" },
+                    {
+                        "data": "id", "render": function (data) {
+                            return `
+                                      <div class="d-flex">
+                                           <a href="/Admin/Userdetail?id=${data}" class='btn btn-info btn-small' style='color:#fff;'><i class='fa fa-pencil-alt mr-1'></i></a>
+                                     </div>
+                                   `
+                        }
+                    }
+
+                ]
+            });
+        }
+
+
+    </script>
+}
+
