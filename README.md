@@ -62,3 +62,6 @@ The world of e-commerce has evolved significantly over the years, with online au
 </p>
 
 
+<h2>**NOTE**</h2>
+<P>1. Create a stripe account copy your secret key & publishable key and paste it into appsettings.json file.</P>
+<p>2. In Account Controller sendemail() method, copy your gmail address, authenticate password and paste it there.</p>
