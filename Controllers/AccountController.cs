@@ -158,9 +158,9 @@ namespace OnlineBiddingSystem.Controllers
 
         public void SendEmail(string emailAddress, string body, string subject)
         {
-            var fromEmail = new MailAddress("musellers786@gmail.com", "Bidout");
+            var fromEmail = new MailAddress("add-your-gmail-address", "Bidout");
             var toEmail = new MailAddress(emailAddress);
-            var fromEmailPassword = "gvcrysukdhimmkyk";
+            var fromEmailPassword = "authenticate-password";
 
             var smtp = new SmtpClient
             {
